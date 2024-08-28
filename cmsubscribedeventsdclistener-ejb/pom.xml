@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>cmsubscribedeventsdclistener</artifactId>
+        <groupId>com.ericsson.oss.services.cmsubscribedevents</groupId>
+        <version>1.7.7-SNAPSHOT</version>
+    </parent>
+    <artifactId>cmsubscribedeventsdclistener-ejb</artifactId>
+    <packaging>ejb</packaging>
+
+    <name>[${project.parent.artifactId}] EJB module</name>
+
+    <properties>
+        <version.maven-ejb-plugin>2.3</version.maven-ejb-plugin>
+        <sonar.tests>src/test/groovy</sonar.tests>
+    </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <!-- This plugin generates J2EE Enterprise Javabean (EJB) file as well as the associated client jar. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <version>${version.maven-ejb-plugin}</version>
+                <configuration>
+                    <ejbVersion>${version.ejb}</ejbVersion>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <providerSelection>2.0</providerSelection>
+                    <source />
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.gmaven.runtime</groupId>
+                        <artifactId>gmaven-runtime-2.0</artifactId>
+                        <version>1.4</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.codehaus.groovy</groupId>
+                                <artifactId>groovy-all</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>${version.groovy}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <threadCount>1</threadCount>
+                    <useSystemClassLoader>true</useSystemClassLoader>
+                    <useManifestOnlyJar>false</useManifestOnlyJar>
+                    <useFile>false</useFile>
+                    <includes>
+                        <include>**/*Spec.java</include>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-8.0</artifactId>
+            <version>1.0.4.Final-redhat-00001</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ericsson.oss.services.cmsubscribedevents</groupId>
+            <artifactId>cmsubscribedeventssubscriptionsvc-api</artifactId>
+            <version>${version.cmsubscribedeventssubscriptionsvc}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-eventbus-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.datalayer.dps</groupId>
+            <artifactId>dps-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ericsson.oss.mediation</groupId>
+            <artifactId>network-element-connector-api-jar</artifactId>
+            <version>${version.network-element-connector-api}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.cm</groupId>
+            <artifactId>com-ecim-mdb-notification-listener-api-jar</artifactId>
+            <version>${version.com-ecim-mdb-notification-listener}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ericsson.cds</groupId>
+            <artifactId>cdi-test-support</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.athaydes</groupId>
+            <artifactId>spock-reports</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-8.0</artifactId>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Dependencies to Service Framework API modules (like sdk-xxx-api) can be added here for compilation purpose only.
+            Only add those Service Framework API dependencies which are used in this project module, and they must be marked as "provided" 
+            scope. -->
+        <!-- Dependencies to Service Framework implementation modules (like sdk-xxx) must not be added here. -->
+
+    </dependencies>
+</project>
